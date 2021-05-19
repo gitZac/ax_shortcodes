@@ -1,0 +1,13 @@
+.stroke--light-blue{
+    background: linear-gradient(to top,#05c4dd 30%,transparent 30%);
+}
+
+.stroke--purple{
+  background: linear-gradient(to top,#9478d2 30%,transparent 30%);
+}
+
+.cursive{
+  font-size:64px; 
+  line-height: 40px; 
+  font-family: 'Great Vibes', cursive;
+}
