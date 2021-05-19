@@ -9,32 +9,33 @@ Author URI:		http://acrossthat
 License:		GPLv2
 */
 
-// Filters that enable shortcodes in ACF
-add_filter('acf/format_value/type=textarea', 'do_shortcode');
-add_filter('acf/format_value/type=text', 'do_shortcode');
+class ax_custom_shortcodes{
+    function __construct(){
+        add_filter('acf/format_value/type=textarea', 'do_shortcode');
+        add_filter('acf/format_value/type=text', 'do_shortcode');
+        add_shortcode('stroke', array($this, 'ax_text_stroke'));
+        add_shortcode('cursive', array($this, 'ax_cursive'));
+        add_action('wp_enqueue_scripts', array($this, 'ax_shortcodes_stylesheets'));
+    }
 
-add_shortcode('stroke', 'ax_text_stroke');
+    function ax_text_stroke($atts = array(), $content){
 
-// Add stroke underliner shortcode for blog
-function ax_text_stroke($atts = array(), $content){
+        $ch_atts = shortcode_atts(array(
+            'color' => 'light-blue'
+        ), $atts);
+    
+        $return_string = '<span class="stroke--' . $ch_atts['color'] . ' ">'. $content . '</span>';
+        return $return_string;
+    }
 
-    $ch_atts = shortcode_atts(array(
-        'color' => 'light-blue'
-    ), $atts);
+    function ax_shortcodes_stylesheets(){
+        wp_enqueue_style('ax_shortcode_styles', plugins_url( '/stylesheet.css', __FILE__ ));
+    }
 
-    $return_string = '<span class="stroke--' . $ch_atts['color'] . ' ">'. $content . '</span>';
-    return $return_string;
+    function ax_cursive($atts, $content){
+        $return_string = '<span class="cursive">'. $content . '</span>';
+        return $return_string;
+    }
 }
 
-add_shortcode('cursive', 'ax_cursive');
-
-function ax_cursive($atts, $content){
-    $return_string = '<span class="cursive">'. $content . '</span>';
-    return $return_string;
-}
-
-add_action( 'wp_enqueue_scripts', 'ax_shortcodes_stylesheets' );
-
-function ax_shortcodes_stylesheets(){
-    wp_enqueue_style('ax_shortcode_styles', plugins_url( '/stylesheet.css', __FILE__ ));
-}
+$ax_custom_shortcodes = new ax_custom_shortcodes();
